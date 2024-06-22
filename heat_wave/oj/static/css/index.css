@@ -3,7 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
-
+.main_content {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 80%;
+}
 .container_main {
   width: 100%;
   height: 100%;
@@ -12,6 +17,9 @@
   border-radius: 10px; /* Rounded corners */
   position: relative;
   overflow: hidden;
+  padding:4px;
+  display:flex;
+  flex-direction: row-reverse;
 }
 
 .container_main::before {
@@ -347,3 +355,225 @@ html, body{
     width: 17px;
   }
   
+/* login button */
+.voltage-button {
+  position: relative;
+  height:fit-content;
+  width:fit-content;
+}
+
+.voltage-button button {
+  color: white;
+  background: #0D1127;
+  padding: 1rem 3rem 1rem 3rem;
+  border-radius: 5rem;
+  border: 5px solid #5978F3;
+  font-size: 1.2rem;
+  line-height: 1em;
+  letter-spacing: 0.075em;
+  transition: background 0.3s;
+}
+
+.voltage-button button:hover {
+  cursor: pointer;
+  background: #0F1C53;
+}
+
+.voltage-button button:hover + svg, .voltage-button button:hover + svg + .dots {
+  opacity: 1;
+}
+
+.voltage-button svg {
+  display: block;
+  position: absolute;
+  top: -0.75em;
+  left: -0.25em;
+  width: calc(100% + 0.5em);
+  height: calc(100% + 1.5em);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+  transition-delay: 0.1s;
+}
+
+.voltage-button svg path {
+  stroke-dasharray: 100;
+  filter: url("#glow");
+}
+
+.voltage-button svg path.line-1 {
+  stroke: #f6de8d;
+  stroke-dashoffset: 0;
+  animation: spark-1 3s linear infinite;
+}
+
+.voltage-button svg path.line-2 {
+  stroke: #6bfeff;
+  stroke-dashoffset: 500;
+  animation: spark-2 3s linear infinite;
+}
+
+.voltage-button .dots {
+  opacity: 0;
+  transition: opacity 0.3s;
+  transition-delay: 0.4s;
+}
+
+.voltage-button .dots .dot {
+  width: 1rem;
+  height: 1rem;
+  background: white;
+  border-radius: 100%;
+  position: absolute;
+  opacity: 0;
+}
+
+.voltage-button .dots .dot-1 {
+  top: 0;
+  left: 20%;
+  animation: fly-up 3s linear infinite;
+}
+
+.voltage-button .dots .dot-2 {
+  top: 0;
+  left: 55%;
+  animation: fly-up 3s linear infinite;
+  animation-delay: 0.5s;
+}
+
+.voltage-button .dots .dot-3 {
+  top: 0;
+  left: 80%;
+  animation: fly-up 3s linear infinite;
+  animation-delay: 1s;
+}
+
+.voltage-button .dots .dot-4 {
+  bottom: 0;
+  left: 30%;
+  animation: fly-down 3s linear infinite;
+  animation-delay: 2.5s;
+}
+
+.voltage-button .dots .dot-5 {
+  bottom: 0;
+  left: 65%;
+  animation: fly-down 3s linear infinite;
+  animation-delay: 1.5s;
+}
+
+@keyframes spark-1 {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+@keyframes spark-2 {
+  to {
+    stroke-dashoffset: -500;
+  }
+}
+
+@keyframes fly-up {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.2);
+  }
+
+  5% {
+    opacity: 1;
+    transform: translateY(-1.5rem) scale(0.4);
+  }
+
+  10%, 100% {
+    opacity: 0;
+    transform: translateY(-3rem) scale(0.2);
+  }
+}
+
+@keyframes fly-down {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.2);
+  }
+
+  5% {
+    opacity: 1;
+    transform: translateY(1.5rem) scale(0.4);
+  }
+
+  10%, 100% {
+    opacity: 0;
+    transform: translateY(3rem) scale(0.2);
+  }
+}
+
+/* editor  */
+
+.card.border-success.mb-3 {
+  height: 567px;
+  width: 463px;
+}
+
+
+
+/* editor */
+.editorbox {
+  height: 100%;
+  background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
+  border-radius: 22px;
+  transition: all 0.3s;
+  width:35%;
+  padding:3px;
+
+}
+.editorbox.sec{
+  height: 100%;
+  background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
+  border-radius: 22px;
+  transition: all 0.3s;
+  width:65%;
+  padding:3px;
+
+}
+
+
+.editorbox:hover {
+  box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.3);
+}
+
+
+
+.editorbox2 {
+  border-radius: 0;
+  transition: all 0.2s;
+  height: 100%;
+
+}
+
+.editorbox2:hover {
+  transform: scale(0.98);
+  border-radius: 20px;
+}
+
+.left_box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 2em;
+  padding-right: 2em;
+  padding-bottom: 0.4em;
+  background-color: #171717;
+  border-radius: 25px;
+  transition: 0.4s ease-in-out;
+  height: 100%;
+}
+
+div#prob_statement {
+  height: 70%;
+}
+
+div#rest_of_part {
+  height: 30%;
+}
+

@@ -2,7 +2,7 @@ import  React,  { useState } from "react"
 import   { Component } from "react"
 import { Link } from 'react-router-dom';
 import '../../static/css/index';
-import Signup from "./signup";
+
 export default class Login extends Component {
 
 
