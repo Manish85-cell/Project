@@ -1,0 +1,9 @@
+{% extends "oj/layout.html" %}
+
+{% block body %}
+    <form action="{% url 'submit' %}" method="post">  
+        {% csrf_token %}                        
+        {{form}}                                
+        <input type="submit" value="Run">       
+    </form>                                     
+{% endblock %}

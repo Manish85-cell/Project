@@ -1,6 +1,7 @@
 import React , { Component } from 'react'
 import Problem from "./Problem"
 import Contest from "./Contest"
+import Editor from './Editor'
 // import Login from "./Login"
 // import Signup from "./Signup"
 import {BrowserRouter as Router,  Routes,Route, Link, Redirect} from "react-router-dom"
@@ -19,6 +20,7 @@ import '../../static/css/index';
                 <Route path='/oj/' element={<h1>This is the home page</h1>} />
                 <Route path='/oj/contests' element={<Contest />}/>
                 <Route path='/oj/problems' element={<Problem/>}/>
+                <Route path='oj/editor2' element={<Editor/>}/>
                 {/* <Route path='/oj/login' element={<Login/>}/> */}
                 {/* <Route path='/oj/signup' element={<Signup/>}/> */}
                 
