@@ -113,37 +113,49 @@ def run_code(language, code, input_data):
         input_file.write(input_data) 
     with open(output_file_path , "w") as output_file:
          pass    
-    if language == "cpp":
-        executable_path = codes_dir / unique
-        compilation_command = f"g++ {str(code_file_path)} -o {str(executable_path)} -lstdc++"
-        os.system(compilation_command)
-        compile_result = subprocess.run(
-            ["g++",str(code_file_path), "-o", str(executable_path), "-lstdc++"],
-            check=True
-        )
-        if compile_result.returncode == 0:
-            subprocess.run(["chmod", "+x", str(executable_path)])
+    try:
+        if language == "cpp":
+            executable_path = codes_dir / unique
+            compilation_command = f"g++ {str(code_file_path)} -o {str(executable_path)} -lstdc++"
+            os.system(compilation_command)
+            compile_result = subprocess.run(
+                ["g++",str(code_file_path), "-o", str(executable_path), "-lstdc++"],
+                check=True,
+                stderr=subprocess.PIPE
+            )
+            if compile_result.returncode == 0:
+                subprocess.run(["chmod", "+x", str(executable_path)])
+                with open(input_file_path, "r") as input_file:
+                    with open(output_file_path, "w") as output_file:
+                        run_result = subprocess.run(
+                            [str(executable_path)],
+                            stdin = input_file,
+                            stdout = output_file,
+                            stderr=subprocess.PIPE
+                        )
+                        if run_result.returncode != 0:
+                            return run_result.stderr.decode()
+            else:
+                return compile_result.stderr.decode()
+        elif language == "py":
             with open(input_file_path, "r") as input_file:
-                with open(output_file_path, "w") as output_file:
-                    subprocess.run(
-                        [str(executable_path)],
+                with open(output_file_path , "w") as output_file:
+                    run_result = subprocess.run(
+                        ["python", str(code_file_path)],
                         stdin = input_file,
-                        stdout = output_file
-                    )
-    elif language == "py":
-        with open(input_file_path, "r") as input_file:
-            with open(output_file_path , "w") as output_file:
-                subprocess.run(
-                    ["python", str(code_file_path)],
-                    stdin = input_file,
-                    stdout = output_file
-                ) 
-    
- 
-    with open(output_file_path, "r") as output_file:
-        output_data = output_file.read()
+                        stdout = output_file,
+                        stderr=subprocess.PIPE
+                    ) 
+                    if run_result.returncode != 0:
+                        return run_result.stderr.decode()
         
-    return output_data
+    
+        with open(output_file_path, "r") as output_file:
+            output_data = output_file.read()
+        
+        return output_data
+    except Exception as e:
+        return str(e)
                   
      
 class CodeSubmissionFORM(forms.ModelForm):
@@ -155,22 +167,16 @@ class CodeSubmissionFORM(forms.ModelForm):
      
 def submit(request):
     if  request.method == "POST":
-        form = CodeSubmissionFORM(request.POST)
-        if form.is_valid():
-            submission = form.save()
-            print(submission.language)
-            print(submission.code)
-            output = run_code(
-                submission.language, submission.code, submission.input_data
-            )
-            submission.output_data = output
-            submission.save()
-            return render(request,"oj/result.html", {"submission": submission})
-    form = CodeSubmissionFORM()
-    context = {
-        "form": form,
-    }
-    return render(request, "oj/compiler.html", context)
+        input_data = request.POST["input_data"]
+        code = request.POST["code"]
+        language = request.POST["language"]
+        
+        output = run_code(
+            language, code , input_data
+        )
+        return render(request,"oj/compiler.html", {"submission": output})
+    
+    return render(request, "oj/compiler.html")
 
 
             

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Sum Problem with Sliding Door</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1e1e1e;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            width: 90%;
+            height: 90%;
+            background-color: #2d2d2d;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #00ff00;
+            position: relative;
+        }
+        .pane {
+            padding: 20px;
+            color: #fff;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            margin: 10px;
+            background-color: #1e1e1e;
+            overflow: auto;
+            flex: 1;
+        }
+        .left-pane, .right-pane {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+        }
+        .resizer {
+            width: 5px;
+            cursor: col-resize;
+            background-color: #00ff00;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            right: 50%;
+            transform: translateX(50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-pane">
+            <div class="pane title">Two Sum</div>
+            <div class="pane">
+                <h2>Problem Statement</h2>
+                <p>Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.</p>
+                <h3>Examples and constraints</h3>
+                <ul>
+                    <li>Input: nums = [2,7,11,15], target = 9</li>
+                    <li>Output: [0,1]</li>
+                    <li>You may assume that each input would have exactly one solution, and you may not use the same element twice.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="resizer" id="resizer"></div>
+        <div class="right-pane">
+            <div class="pane">
+                <h2>Code Here</h2>
+                <!-- Your code goes here -->
+            </div>
+            <div class="pane">
+                <h2>TestCases</h2>
+                <p>Test your implementation with various test cases.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const resizer = document.getElementById('resizer');
+        const container = document.querySelector('.container');
+        const leftPane = document.querySelector('.left-pane');
+        const rightPane = document.querySelector('.right-pane');
+
+        let startX = 0;
+        let startWidth = 0;
+
+        resizer.addEventListener('mousedown', (e) => {
+            startX = e.clientX;
+            startWidth = leftPane.getBoundingClientRect().width;
+
+            document.addEventListener('mousemove', resize);
+            document.addEventListener('mouseup', stopResize);
+        });
+
+        const resize = (e) => {
+            const dx = e.clientX - startX;
+            const newLeftWidth = ((startWidth + dx) / container.getBoundingClientRect().width) * 100;
+            leftPane.style.flex = `0 0 ${newLeftWidth}%`;
+            rightPane.style.flex = `0 0 ${100 - newLeftWidth}%`;
+        };
+
+        const stopResize = () => {
+            document.removeEventListener('mousemove', resize);
+            document.removeEventListener('mouseup', stopResize);
+        };
+    </script>
+</body>
+</html>

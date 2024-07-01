@@ -15,15 +15,17 @@ export default class Problem extends Component {
                                     <th>Problem</th>
                                     <th>Acceptance</th>
                                     <th>Difficulty Level</th>
-                                  
+                                    
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Solved</td>
-                                    <td>Two Sum  with target value</td>
-                                    <td>70%</td>
-                                    <td>Medium</td>                                 
+                                    <a href="/oj/submit">
+                                        <td>Solved</td>
+                                        <td>Two Sum  with target value</td>
+                                        <td>70%</td>
+                                        <td>Medium</td>  
+                                    </a>
                                 </tr>
                                 <tr>
                                     <td>Solved</td>

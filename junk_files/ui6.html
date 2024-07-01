@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Sum Problem with Sliding Door</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1e1e1e;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 90%;
+            height: 90%;
+            background-color: #2d2d2d;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #00ff00;
+            position: relative;
+        }
+        .pane {
+            padding: 20px;
+            color: #fff;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            margin: 10px;
+            background-color: #1e1e1e;
+            overflow: auto;
+            flex: 1;
+        }
+        .pane-row {
+            display: flex;
+            flex: 1;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+        }
+        .resizer {
+            background-color: #00ff00;
+            position: absolute;
+        }
+        .resizer-horizontal {
+            height: 5px;
+            cursor: row-resize;
+            width: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .resizer-vertical {
+            width: 5px;
+            cursor: col-resize;
+            height: 100%;
+            right: 50%;
+            transform: translateX(50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="pane title">Two Sum</div>
+        <div class="resizer resizer-horizontal" id="resizer-horizontal"></div>
+        <div class="pane-row">
+            <div class="pane">
+                <h2>Problem Statement</h2>
+                <p>Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.</p>
+                <h3>Examples and constraints</h3>
+                <ul>
+                    <li>Input: nums = [2,7,11,15], target = 9</li>
+                    <li>Output: [0,1]</li>
+                    <li>You may assume that each input would have exactly one solution, and you may not use the same element twice.</li>
+                </ul>
+            </div>
+            <div class="resizer resizer-vertical" id="resizer-vertical"></div>
+            <div class="pane">
+                <h2>Code Here</h2>
+                <!-- Your code goes here -->
+                <h2>TestCases</h2>
+                <p>Test your implementation with various test cases.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const resizerHorizontal = document.getElementById('resizer-horizontal');
+        const resizerVertical = document.getElementById('resizer-vertical');
+        const container = document.querySelector('.container');
+        const paneTop = resizerHorizontal.previousElementSibling;
+        const paneBottom = resizerHorizontal.nextElementSibling;
+        const leftPane = resizerVertical.previousElementSibling;
+        const rightPane = resizerVertical.nextElementSibling;
+
+        let startX = 0, startY = 0;
+        let startWidth = 0, startHeight = 0;
+
+        resizerHorizontal.addEventListener('mousedown', (e) => {
+            startY = e.clientY;
+            startHeight = paneTop.getBoundingClientRect().height;
+
+            document.addEventListener('mousemove', resizeHorizontal);
+            document.addEventListener('mouseup', stopResizeHorizontal);
+        });
+
+        const resizeHorizontal = (e) => {
+            const dy = e.clientY - startY;
+            const newTopHeight = ((startHeight + dy) / container.getBoundingClientRect().height) * 100;
+            paneTop.style.flex = `0 0 ${newTopHeight}%`;
+            paneBottom.style.flex = `0 0 ${100 - newTopHeight}%`;
+        };
+
+        const stopResizeHorizontal = () => {
+            document.removeEventListener('mousemove', resizeHorizontal);
+            document.removeEventListener('mouseup', stopResizeHorizontal);
+        };
+
+        resizerVertical.addEventListener('mousedown', (e) => {
+            startX = e.clientX;
+            startWidth = leftPane.getBoundingClientRect().width;
+
+            document.addEventListener('mousemove', resizeVertical);
+            document.addEventListener('mouseup', stopResizeVertical);
+        });
+
+        const resizeVertical = (e) => {
+            const dx = e.clientX - startX;
+            const newLeftWidth = ((startWidth + dx) / container.getBoundingClientRect().width) * 100;
+            leftPane.style.flex = `0 0 ${newLeftWidth}%`;
+            rightPane.style.flex = `0 0 ${100 - newLeftWidth}%`;
+        };
+
+        const stopResizeVertical = () => {
+            document.removeEventListener('mousemove', resizeVertical);
+            document.removeEventListener('mouseup', stopResizeVertical);
+        };
+    </script>
+</body>
+</html>
