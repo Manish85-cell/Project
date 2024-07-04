@@ -72,80 +72,80 @@ def register(request):
 def editor(request):
     return render(request, "oj/editor.html")
 
-# def run_code(language, code, input_data):   
-    project_path = Path(settings.BASE_DIR)
-    directories = ["codes", "input", "outputs"]
+# # def run_code(language, code, input_data):   
+#     project_path = Path(settings.BASE_DIR)
+#     directories = ["codes", "input", "outputs"]
     
-    for directory in directories:
-        dir_path = project_path/directory
-        if not dir_path.exists():
-            dir_path.mkdir(parents=True, exist_ok = True)
+#     for directory in directories:
+#         dir_path = project_path/directory
+#         if not dir_path.exists():
+#             dir_path.mkdir(parents=True, exist_ok = True)
     
-    codes_dir = project_path / "codes"
-    input_dir = project_path / "input"
-    output_dir = project_path / "outputs"
+#     codes_dir = project_path / "codes"
+#     input_dir = project_path / "input"
+#     output_dir = project_path / "outputs"
     
-    unique = str(uuid.uuid4())
+#     unique = str(uuid.uuid4())
     
-    code_file_name = f"{unique}.{language}"
-    input_file_name = f"{unique}.txt"
-    output_file_name = f"{unique}.txt"
+#     code_file_name = f"{unique}.{language}"
+#     input_file_name = f"{unique}.txt"
+#     output_file_name = f"{unique}.txt"
     
-    code_file_path = codes_dir / code_file_name
-    input_file_path = input_dir / input_file_name
-    output_file_path = output_dir / output_file_name
+#     code_file_path = codes_dir / code_file_name
+#     input_file_path = input_dir / input_file_name
+#     output_file_path = output_dir / output_file_name
 
 
-    with open(code_file_path, "w") as code_file:
-        code_file.write(code)
+#     with open(code_file_path, "w") as code_file:
+#         code_file.write(code)
     
-    with open(input_file_path, "w") as input_file:
-        input_file.write(input_data) 
-    with open(output_file_path , "w") as output_file:
-        pass    
-    try:
-        if language == "cpp":
-            executable_path = codes_dir / unique
-            compilation_command = f"g++ {str(code_file_path)} -o {str(executable_path)} -lstdc++"
-            compile_result = subprocess.run(
-                compilation_command,
-                check=True,
-                shell=True,
-                stderr=subprocess.PIPE
-            )
-            if compile_result.returncode == 0:
-                subprocess.run(["chmod", "+x", str(executable_path)])
-                with open(input_file_path, "r") as input_file:
-                    with open(output_file_path, "w") as output_file:
-                        run_result = subprocess.run(
-                            [str(f"./{executable_path}")],
-                            stdin = input_file,
-                            stdout = output_file,
-                            stderr=subprocess.PIPE
-                        )
-                        if run_result.returncode != 0:
-                            return run_result.stderr.decode()
-            else:
-                return compile_result.stderr.decode()
-        elif language == "py":
-            with open(input_file_path, "r") as input_file:
-                with open(output_file_path , "w") as output_file:
-                    run_result = subprocess.run(
-                        ["python", str(code_file_path)],
-                        stdin = input_file,
-                        stdout = output_file,
-                        stderr=subprocess.PIPE
-                    ) 
-                    if run_result.returncode != 0:
-                        return run_result.stderr.decode()
+#     with open(input_file_path, "w") as input_file:
+#         input_file.write(input_data) 
+#     with open(output_file_path , "w") as output_file:
+#         pass    
+#     try:
+#         if language == "cpp":
+#             executable_path = codes_dir / unique
+#             compilation_command = f"g++ {str(code_file_path)} -o {str(executable_path)} -lstdc++"
+#             compile_result = subprocess.run(
+#                 compilation_command,
+#                 check=True,
+#                 shell=True,
+#                 stderr=subprocess.PIPE
+#             )
+#             if compile_result.returncode == 0:
+#                 subprocess.run(["chmod", "+x", str(executable_path)])
+#                 with open(input_file_path, "r") as input_file:
+#                     with open(output_file_path, "w") as output_file:
+#                         run_result = subprocess.run(
+#                             [str(f"./{executable_path}")],
+#                             stdin = input_file,
+#                             stdout = output_file,
+#                             stderr=subprocess.PIPE
+#                         )
+#                         if run_result.returncode != 0:
+#                             return run_result.stderr.decode()
+#             else:
+#                 return compile_result.stderr.decode()
+#         elif language == "py":
+#             with open(input_file_path, "r") as input_file:
+#                 with open(output_file_path , "w") as output_file:
+#                     run_result = subprocess.run(
+#                         ["python", str(code_file_path)],
+#                         stdin = input_file,
+#                         stdout = output_file,
+#                         stderr=subprocess.PIPE
+#                     ) 
+#                     if run_result.returncode != 0:
+#                         return run_result.stderr.decode()
         
     
-        with open(output_file_path, "r") as output_file:
-            output_data = output_file.read()
+#         with open(output_file_path, "r") as output_file:
+#             output_data = output_file.read()
         
-        return output_data
-    except Exception as e:
-        return str(e)
+#         return output_data
+#     except Exception as e:
+#         return str(e)
 def run_code(language, code, input_data):
     project_path = Path(settings.BASE_DIR)
     directories = ["codes", "input", "outputs"]
@@ -212,20 +212,30 @@ def run_code(language, code, input_data):
         return output_data
     except Exception as e:
         return str(e)                         
+
      
+Language = [
+    {'value':'py', 'label':'python'},
+    {'value':'cpp' , 'label':'cpp'},
+    {'value':'c', 'label':'c'}
+]
 def submit(request):
     curr_code = ""
+    lang = "cpp"
+    # ipt = ""  
     if  request.method == "POST":
         input_data = request.POST["input_data"]
         code = request.POST["code"]
         language = request.POST["language"]
+        lang = language
+        # ipt = input_data
         curr_code = code
         output = run_code(
             language, code , input_data
         )
-        return render(request,"oj/compiler.html", {"submission": output , "curr_code": curr_code})
+        return render(request,"oj/compiler.html", {"submission": output , "curr_code": curr_code, "lang" : language, 'options': Language,'selected_value': lang})
     
-    return render(request, "oj/compiler.html", {"curr_code":curr_code})
+    return render(request, "oj/compiler.html", {"curr_code":curr_code,  'options': Language, 'selected_value': lang})
 
 
             
