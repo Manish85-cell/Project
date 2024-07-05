@@ -222,20 +222,20 @@ Language = [
 def submit(request):
     curr_code = ""
     lang = "cpp"
-    # ipt = ""  
+    ipt = ""  
     if  request.method == "POST":
         input_data = request.POST["input_data"]
         code = request.POST["code"]
         language = request.POST["language"]
         lang = language
-        # ipt = input_data
+        ipt = input_data
         curr_code = code
         output = run_code(
             language, code , input_data
         )
-        return render(request,"oj/compiler.html", {"submission": output , "curr_code": curr_code, "lang" : language, 'options': Language,'selected_value': lang})
+        return render(request,"oj/compiler.html", {"submission": output , "curr_code": curr_code, "lang" : language, 'options': Language,'selected_value': lang, "input":ipt})
     
-    return render(request, "oj/compiler.html", {"curr_code":curr_code,  'options': Language, 'selected_value': lang})
+    return render(request, "oj/compiler.html", {"curr_code":curr_code,  'options': Language, 'selected_value': lang, 'input': ipt})
 
 
             
