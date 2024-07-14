@@ -1,0 +1,89 @@
+{% extends '../layout.html' %}
+{% block body %}
+
+<div style="padding-top:20px" >
+    <nav class="navbar bg-body-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'index' %}" style="color:white">Home</a>
+          <form class="d-flex" role="search" action="{% url 'problems' %}" method="post">
+            {% csrf_token %}
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+     <br>
+     <div class="container2">
+
+      <ul class="responsive-table" style="color: black">
+        <li class="table-header">
+          <div class="col2 col2-1">Status</div>
+          <div class="col2 col2-2">Problem</div>
+          <div class="col2 col2-3">Difficulty Level</div>
+          
+        </li>
+        {% for Prob in Problems %}
+        <a href="{% url 'solve' Prob.id %}" style="text-decoration: none; color:black">
+        <li class="table-row">
+          <div class="col2 col2-1" data-label="Status">
+            {% if user %}                         
+            {% if status == 0%}
+            Unsolved
+            {% else %}
+              Solved
+            {% endif %}
+            {% else %}
+            Login/SignUP
+            {% endif %}
+          </div>
+          <div class="col2 col2-2" data-label="Problem">{{Prob.name}}</div>
+          <div class="col2 col2-4" data-label="Difficulty Level">{{Prob.difficulty_levels}}</div>
+        </li>
+      </a>
+        {% endfor %}
+        
+      </ul>
+  </div>
+  
+    <!-- <table class="table table-dark table-hover" id="tab">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Problem</th>
+                        <th>Acceptance</th>
+                        <th>Difficulty Level</th>
+                        
+                    </tr>
+                  
+                </thead>
+              
+                <tbody>
+                    {% for Prob in Problems %}
+
+                    <tr class={{Prob.status}}>
+                            <td>
+                                {% if user %}                         
+                                      {% if status == 0%}
+                                        Unsolved
+                                      {% else %}
+                                        Solved
+                                      {% endif %}
+                                {% endif %}
+                            </td>
+                            <td>
+                               <a href="{% url 'solve' Prob.id %}" style="text-decoration: none; col2or:white">{{Prob.name}}</a>  
+                            </td>
+                            <td>
+                                 70%
+                            </td>
+                            <td>
+                                
+                                {{Prob.difficulty_levels}}
+                            </td>  
+                    </tr>
+                    
+                    {% endfor %}
+                </tbody>
+      </table> -->
+    </div>
+{% endblock %}

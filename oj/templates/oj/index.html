@@ -1,0 +1,107 @@
+{% extends "../layout.html" %}
+
+{% block body %}
+
+<div class="collapse" id="navbarToggleExternalContent" data-bs-theme="dark" >
+  <div class="bg-dark p-4" id="nav-bar">
+    <div>
+      <button><a  class="btn btn-success" href="{% url 'submit' %}">Online Judge</a></button>
+      <button><a  class="btn btn-primary" href="{% url 'problems' %}">Problems</a></button>
+    </div>
+    <div>
+      {% if user.username %} 
+      {{user.username}}
+      <button><a href="{% url 'logout' %}" class="btn btn-danger">Logout</a></button>
+      {% else %}
+            <button><a href="{% url 'register' %}" class="btn btn-primary">Register</a></button>
+            <button><a href="{% url 'login' %}" class="btn btn-primary">Login</a></button>
+      {% endif %}
+    </div>
+    <!-- <div class = "container">
+           Task Manager
+           <br>
+           {% if message %}
+             <div class = "p-3 text-danger-emphasis  border border-danger-subtle rounded-3">{{message}}</div>
+           {% endif %}
+           <ul>
+               
+               {% for task in tasks %}
+                 <li>{{task}}</li>
+               {% empty %}
+                 <li>No tasks</li>
+               {% endfor %}
+               
+              </ul>
+              <div class = "add">
+                   <form action="{% url 'index' %}" method="post">
+                     {% csrf_token %}
+                       <input class="form-control" type="text" placeholder="Add Task" name="task">
+                       <input name="username" type="hidden" value={{user.username}}>
+                       <input type="submit" class="btn btn-primary" value="Add">
+                   </form>                  
+              </div>
+    </div> -->
+  </div>
+</div>
+<!-- <nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav> -->
+
+<div class="container text-center">
+
+
+
+
+  <div class="row">
+    <div class="col" id="comment" style="font-size:50px;  background: linear-gradient(to right,#2c6443, #203a43, #0f2027);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0px 0px 15px rgba(42, 173, 103, 0.646); " >
+      <div class="row">
+        <div class="col" >
+          Test Test Test
+        </div>
+      </div>
+      <div class="row" >
+        <div class="col">
+          Without any rest
+        </div>
+      </div>
+      <div class="row">
+        <div class="col" >
+          Do Your best
+        </div>
+      </div>
+
+    </div>
+   
+    <div class="col" id = "tag">
+      
+      <div class="row" id="name" style="font-size: 100px; color:rgb(255, 137, 137); padding-left:0px; background: linear-gradient(to right,#fc5a15e9, #203a43, #0f2027);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0px 0px 15px rgba(241, 17, 17, 0.603); "> 
+            Heat Wave
+       </div>
+       <div class="text-success">
+         <hr class="border border-primary border-2 opacity-50">
+       </div>
+       <div class="row" id="title" style="font-size: 99px ; color:rgb(255, 255, 255)"> 
+         An Online Judge
+        </div>
+        <div class="text-success">
+          <hr class="border border-primary border-2 opacity-50">
+        </div>
+    </div>
+  </div>
+
+ 
+  </div>
+</div>
+{% endblock %}

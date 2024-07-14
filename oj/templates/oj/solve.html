@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.9">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+
+
+    <title>{{problem.name}}</title>
+    
+    
+    <style>
+        
+        #code_test{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        #run{
+            width:40%;
+        }
+        #submit{
+
+            width:40%
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right,#2c5364, #203a43, #0f2027);
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-right: 9px;
+            display: flex;
+            /* gap: 10px; */
+            margin-left: 9px;
+            /* width: 100%; */
+            height: 90%;
+            background: linear-gradient(to left, #2bc0e4, #eaecc6);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #000000;
+        }
+        .code-section, .examples, .test-cases {
+            padding: 20px;
+            color: #fff;
+            border: 2px solid #000000;
+            border-radius: 10px;
+            margin: 10px;
+            background: linear-gradient(to right,#2c5364, #203a43, #0f2027);
+        }
+        .title {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+           
+            text-align: center;
+            font-size: 24px;
+            background-color: #1e1e1e;
+            margin-left: 9px;
+            margin-right: 9px;
+            margin-bottom: 6px;
+            grid-column: span 2;
+            text-align: center;
+            font-size: 24px;
+            margin-top: 35px;
+            height: 20px;
+            background-color: #1e1e1e;
+            padding: 10px;
+            color: #fff;
+            border: 2px solid #000000;
+            border-radius: 10px;
+
+        }
+        .examples {
+            grid-row: 2 / 4;
+            background-color: #1e1e1e;
+            height: auto;
+            font-size: smaller;
+            width: fit-content;
+            margin-bottom: 19px;
+        }
+        .code-section {
+            grid-column: 2 / 3;
+            grid-row: 2 / 3;
+            background-color: #1e1e1e;
+            height:auto
+        }
+        .language-selection {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+        
+        .radio-group label {
+            margin-right: 15px;
+            font-size: 14px;
+            color: #fff;
+        }
+        
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #07d9bb;
+            background-color: #1e1e1e;
+            color: #fff;
+           
+        }
+
+        button {
+            width: auto;
+        
+            color: #1e1e1e;
+            cursor: pointer;
+        }
+
+        .test-cases {
+            grid-column: 2 / 3;
+            grid-row: 3 / 4;
+            background-color: #1e1e1e;
+            height: auto;
+            overflow: auto;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+        input, select, textarea {
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 2px solid #000000;
+            background-color: #1e1e1e;
+            color: #fff;
+            background: linear-gradient(to right,#2c5364, #203a43, #0f2027);
+        }
+        button {
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: none;
+            background-color: #07d9bb;
+            color: #1e1e1e;
+            cursor: pointer;
+        }
+        .flex_container{
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            flex-direction: row;
+        }
+        .flex_item{
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: auto;
+        }
+        #flex{
+            display: flex;
+            flex-direction: column;
+        }
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .tab-buttons button {
+            margin: 0 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        button:hover{
+            background-color:  #00ffd9;
+        }
+        p{
+            font-size: large;
+             font-stretch:extra-expanded;
+        }
+    </style>
+    <script>
+        // document.querySelector('.title').addEventListener
+    </script>
+</head>
+<body>
+    <div id="flex">
+    <div class="title">
+       <div>
+        <a href="{% url 'problems' %}" style="text-decoration: none; color:white;">
+          Back
+        </a>
+       </div>
+       <div>
+        {{problem.name}}
+       </div>
+       <div>
+        Next
+       </div>
+    </div>
+    <div class="container">
+        <div class="examples">
+
+            <h2>Problem Statement</h2>
+            <p>{{problem.statement}}</p>
+            <!-- <h3>Examples and constraints</h3>
+            <ul>
+                <li>Input: nums = [2,7,11,15], target = 9</li>
+                <li>Output: [0,1]</li>
+                <li>You may assume that each input would have exactly one solution, and you may not use the same element twice.</li>
+            </ul> -->
+        </div>
+        <div class="flex_container">
+
+         <div class="code-section" class="flex_item"  ondblclick="toggle('.examples'), toggle('.test-cases')"  style="cursor: pointer;"> 
+                   <h2>Code Here</h2>
+                    <form action="{% url 'solve' problem.id  %}" method="post" >
+                        {% csrf_token %}
+                        
+                        <div class="language-selection">
+                            <label for="language">Language:</label>
+                            <div class="radio-group">
+                                {% for option in options %}
+                                    <input type="radio" id="{{ option.value }}" name="language" value="{{ option.value }}" {% if option.value == lang %}checked{% endif %}>
+                                    <label for="{{ option.value }}">{{ option.label }}</label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <label for="code">Code:</label>
+                        <textarea id="code" name="code" rows="25" cols="80" style="font-size: 15px;" >{{code}}</textarea>
+                        <!-- <label for="input_data" style="display: none;">Input Data:</label> -->
+                        <textarea type="text" id="input_data" name="input_data" placeholder="{{ input }}" style="display: none;" rows = "2" columns = "10"></textarea>
+                        <div id="code_test">
+                            <button type="submit" name="action" id="run" value="run">Run Code</button>
+                            <button type="submit" name="action" id="submit" value="submit">Submit</button>
+
+                        </div>
+                    </form> 
+         </div>  
+      
+        <div class="test-cases" class="flex_item">
+            <div class="tab-buttons">
+                <button onclick="showSection('input', 'output')" >Input</button>
+                <button onclick="showSection('output', 'input')">Output</button>
+            </div>
+            <div id="output">
+                
+                <h2>Output</h2>
+                <!-- <p>Test your implementation with various test cases.</p> -->
+             
+                ${% if output and not expected_output %}
+                    {{output}}
+                {% endif %}   
+                {{message}}
+
+            </div>
+
+            <div id="input">
+
+                <h2>Input Data:</h2>
+                <textarea type="text" id="input_data_visible" name="input_data_visible" placeholder="{{ input }}" rows="2" cols="15">{{input}}</textarea><br>
+                {% if expected_output %}
+               
+                <label for="floatingInputInvalid">Your Output</label>
+                <input  class="form-control is-invalid" id="floatingInputInvalid" placeholder="name@example.com" value={{output}}>
+                <label for="floatingInputInvalid">Expected Output</label>
+                <input class="form-control" id="floatingInputInvalid" placeholder="name@example.com" value={{expected_output}}>
+                
+                {% endif %}
+            </div>
+        </div>
+    </div>
+        
+    </div>
+</div>
+<script>
+
+        document.querySelector('form').addEventListener('submit', function() {
+            document.getElementById('input_data').value = document.getElementById('input_data_visible').value;
+        });
+        // function showSection(sectionId) {
+            //     document.querySelectorAll('.input-section, .test-cases').forEach(function(section) {
+                //         section.classList.remove('active-section');
+                //     });
+                //     document.getElementById(sectionId).classList.add('active-section');
+                // }
+                
+        document.getElementById("input").style.display = 'none';
+        function showSection(section, close){
+                document.getElementById(section).style.display='block';
+                document.getElementById(close).style.display='none';
+        }
+        function toggle(section){
+            
+            let dis = document.querySelector(section).style.display;
+
+            if(dis == 'none'){
+                document.querySelector(section).style.display = 'block';
+            }
+            else{
+                document.querySelector(section).style.display = 'none';
+            }
+        }
+
+    
+    // Copy the value from visible input to the hidden input before submitting
+ </script>
+</body>
+</html>
