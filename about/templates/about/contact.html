@@ -1,0 +1,33 @@
+{% extends '../layout_about.html' %}
+{% block body %}
+<style>
+
+</style>
+
+<div class="c_main">
+    <div class="Contact_form">
+        <h1>Contact me for work/general enquiry</h1>
+        <form>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="exampleInputPhone" class="form-label">Phone no.</label>
+                <input type="phone" class="form-control" id="exampleInputPhone">
+            </div>
+
+            <div class="mb-3 form-check" id="checky">
+                <input type="checkbox" class="form-check-input" id="isClient">
+                <label class="form-text" for="isclient">I want you to work on a project</label>
+            </div>
+            <div id="btn-submit" class="buttons">
+                <button type="submit">Submit</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
