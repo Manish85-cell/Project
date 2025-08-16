@@ -1,20 +1,26 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,700&display=swap" />  
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,700&display=swap" />
     <title>{{problem.name}}</title>
     <style>
         /* New color scheme */
         :root {
-            --primary-bg: #1f2937; /* Darker background */
-            --secondary-bg: #4b5563; /* Light grey background for sections */
-            --primary-color: #f3f4f6; /* Light color for text */
-            --accent-color: #10b981; /* Green accent color */
-            --error-color: #ef4444; /* Red for errors */
-            --border-color: #374151; /* Border color */
+            --primary-bg: #1f2937;
+            /* Darker background */
+            --secondary-bg: #4b5563;
+            /* Light grey background for sections */
+            --primary-color: #f3f4f6;
+            /* Light color for text */
+            --accent-color: #10b981;
+            /* Green accent color */
+            --error-color: #ef4444;
+            /* Red for errors */
+            --border-color: #374151;
+            /* Border color */
         }
 
         body {
@@ -24,8 +30,10 @@
             height: 100vh;
             background: var(--primary-bg);
             margin: 0;
-            font-family: 'Poppins', sans-serif; /* New consistent font */
-            color: var(--primary-color); /* Set text color */
+            font-family: 'Poppins', sans-serif;
+            /* New consistent font */
+            color: var(--primary-color);
+            /* Set text color */
         }
 
         .container {
@@ -34,7 +42,8 @@
             margin: 0 auto;
             display: flex;
             flex-direction: row;
-            background-color: var(--secondary-bg); /* Secondary background */
+            background-color: var(--secondary-bg);
+            /* Secondary background */
             border-radius: 10px;
             overflow: hidden;
             border: 2px solid var(--border-color);
@@ -50,7 +59,9 @@
             border-radius: 10px 10px 0 0;
         }
 
-        .examples, .code-section, .test-cases {
+        .examples,
+        .code-section,
+        .test-cases {
             padding: 20px;
             border: 2px solid var(--border-color);
             border-radius: 10px;
@@ -81,7 +92,9 @@
             transform: scale(1.02);
         }
 
-        input, select, textarea {
+        input,
+        select,
+        textarea {
             margin-bottom: 15px;
             padding: 10px;
             font-size: 16px;
@@ -92,7 +105,8 @@
             transition: border-color 0.3s;
         }
 
-        input:focus, textarea:focus {
+        input:focus,
+        textarea:focus {
             border-color: var(--accent-color);
         }
 
@@ -122,8 +136,10 @@
             resize: horizontal;
             min-width: 290px;
             max-width: 930px;
-            min-height: 517px; /* Set a fixed height for better layout */
-            font-family: 'Courier New', monospace; /* Monospace font for code */
+            min-height: 517px;
+            /* Set a fixed height for better layout */
+            font-family: 'Courier New', monospace;
+            /* Monospace font for code */
         }
 
         #code_test {
@@ -131,7 +147,8 @@
             justify-content: space-between;
         }
 
-        #run, #submit {
+        #run,
+        #submit {
             width: 40%;
         }
 
@@ -156,7 +173,8 @@
 
             #code {
                 width: 100%;
-                height: 200px; /* Adjust height for smaller screens */
+                height: 200px;
+                /* Adjust height for smaller screens */
             }
 
             .flex_container {
@@ -167,17 +185,25 @@
                 flex-direction: column;
             }
         }
+
         .flex_container {
             display: flex;
             flex-direction: row;
         }
+
         /* Accessibility improvements */
-        button:focus, input:focus, select:focus, textarea:focus {
-            outline: 3px solid var(--accent-color); /* Clear focus outline */
+        button:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 3px solid var(--accent-color);
+            /* Clear focus outline */
         }
-        #flex{
+
+        #flex {
             width: 1476px;
         }
+
         .tooltip-notification {
             display: none;
             padding: 10px;
@@ -192,9 +218,10 @@
         }
     </style>
 </head>
+
 <body>
-      <!-- Tooltip notification -->
-      <div class="tooltip-notification" id="tooltip-notification">
+    <!-- Tooltip notification -->
+    <div class="tooltip-notification" id="tooltip-notification">
         Double-tap the code editor or Problem Statement to expand it for better visibility!
         <button onclick="dismissTooltip()">Got it!</button>
     </div>
@@ -229,27 +256,30 @@
                             <label for="language">Language:</label>
                             <div class="radio-group">
                                 {% for option in options %}
-                                    <input type="radio" id="{{ option.value }}" name="language" {% if option.value == 'py' %} checked {% endif %} value="{{ option.value }}" {% if option.value == lang %}checked{% endif %}>
+                                    <input type="radio" id="{{ option.value }}" name="language"
+                                        value="{{ option.value }}"
+                                        {% if option.value == 'py' or option.value == lang %}checked{% endif %}>
                                     <label for="{{ option.value }}">{{ option.label }}</label>
                                 {% endfor %}
                             </div>
                         </div>
-                        
+
                         <textarea id="code" name="code" rows="25" cols="80" style="font-size: 15px;">{{code}}</textarea>
-                        <textarea type="text" id="input_data" name="input_data" placeholder="{{ input }}" style="display: none;" rows="2" columns="10"></textarea>
+                        <textarea type="text" id="input_data" name="input_data" placeholder="{{ input }}"
+                            style="display: none;" rows="2" columns="10"></textarea>
                         <div id="code_test">
                             <button type="submit" name="action" id="run" value="run" class="mybutton">Run Code</button>
-                            <!-- <button type="submit" name="action" id="evaluate" value="evaluate" class="mybutton">Evaluate</button> -->
-                            <button type="submit" name="action" id="submit" value="submit" class="mybutton">Submit</button>
+                            <button type="submit" name="action" id="submit" value="submit"
+                                class="mybutton">Submit</button>
                         </div>
                     </form>
                 </div>
                 <div class="test-cases">
                     <div class="tab-buttons">
                         {% if expected_output %}
-                           <button onclick="showSection('input', 'output')" class="btn-custom-failure">Error</button>
+                        <button onclick="showSection('input', 'output')" class="btn-custom-failure">Error</button>
                         {% else %}
-                          <button onclick="showSection('input', 'output')" class="mybutton">Input</button>
+                        <button onclick="showSection('input', 'output')" class="mybutton">Input</button>
                         {% endif %}
                         <button onclick="showSection('output', 'input')" class="mybutton">Output</button>
                     </div>
@@ -265,17 +295,21 @@
                         {% endif %}
                         <div style="font-size: x-large;">
                             $<br>{% if output and not expected_output %}
-                                {{output|linebreaksbr}} 
-                            {% endif %}   
+                            {{output|linebreaksbr}}
+                            {% endif %}
                         </div>
                     </div>
                     <div id="input" style="display: none;">
-                        <textarea type="text" id="input_data_visible" name="input_data_visible" placeholder="{{ input }}" rows="4" cols="50" style="border: 2px solid black;">{{input}}</textarea><br>
+                        <textarea type="text" id="input_data_visible" name="input_data_visible"
+                            placeholder="{{ input }}" rows="2" cols="20"
+                            style="border: 2px solid black;">{{input}}</textarea><br>
                         {% if expected_output %}
                         <label for="floatingInputInvalid">Your Output</label>
-                        <input class="form-control is-invalid" id="floatingInputInvalid" placeholder="Your output" value="{{output}}">
+                        <input class="form-control is-invalid" id="floatingInputInvalid" placeholder="Your output"
+                            value="{{output}}">
                         <label for="floatingInputInvalid">Expected Output</label>
-                        <input class="form-control is-valid" id="floatingInputInvalid" placeholder="Expected output" value="{{expected_output}}">
+                        <input class="form-control is-valid" id="floatingInputInvalid" placeholder="Expected output"
+                            value="{{expected_output}}">
                         {% endif %}
                     </div>
                 </div>
@@ -283,7 +317,7 @@
         </div>
     </div>
     <script>
-        document.querySelector('form').addEventListener('submit', function() {
+        document.querySelector('form').addEventListener('submit', function () {
             document.getElementById('input_data').value = document.getElementById('input_data_visible').value;
         });
 
@@ -295,12 +329,12 @@
             document.getElementById(show).style.display = 'block';
             document.getElementById(hide).style.display = 'none';
         }
-        $(document).ready(function() {
+        $(document).ready(function () {
             if (!localStorage.getItem('tooltipDismissed')) {
                 $('#tooltip-notification').fadeIn(500);
-                
+
                 // Hide the notification after 5 seconds if not dismissed manually
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#tooltip-notification').fadeOut(500);
                     // Optionally set the flag when the timeout is reached
                     localStorage.setItem('tooltipDismissed', 'true');
@@ -315,4 +349,5 @@
         }
     </script>
 </body>
+
 </html>

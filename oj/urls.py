@@ -9,7 +9,5 @@ urlpatterns = [
     path('problems', views.problems, name="problems"),
     path('solve/<int:problem_id>', views.solve, name="solve"),
     path('profile', views.profile, name="profile"),
-    path('task', views.task, name = "task"),
-    path('comingsoon', views.comingsoon, name="comingsoon"),
-    path('evaluate', views.evaluate_code, name="evaluate")
+    path('comingsoon', views.comingsoon, name="comingsoon")
 ]

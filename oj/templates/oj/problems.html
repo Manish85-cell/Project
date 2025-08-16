@@ -4,11 +4,13 @@
 
 {% block body %}
 <div class="container" >
+  <form action="{% url 'problems'  %}" method="POST">
   {% csrf_token %}
   <div class="search-bar">
-    <input type="text" placeholder="Search" class="search-input">
-    <button class="btn btn-search">Search</button>
+    <input type="text" placeholder="Search" class="search-input" name="q">
+    <button class="btn btn-search" type="submit">Search</button>
   </div>
+  </form>
   <table class="problem-table">
     <thead>
       <tr>
@@ -19,7 +21,7 @@
     </thead>
     <tbody>
       {% for Prob in Problems %}
-      <tr onclick="location.href= '{% url 'solve' Prob.id %}'" style="cursor: pointer;">
+      <tr onclick="location.href='{% url 'solve' Prob.id %}'" style="cursor: pointer;">
         <td>
           {% if user.is_authenticated %}
             {% if not Prob.id in status %}
