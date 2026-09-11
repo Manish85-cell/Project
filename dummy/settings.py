@@ -128,5 +128,4 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-GEMINI_API_KEY = "AIzaSyA-m2pt91XgayRfAYaV3KFBZ-g6pTdb_BI"
 

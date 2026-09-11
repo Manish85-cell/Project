@@ -7,7 +7,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from django.contrib import sessions
 from django.contrib.auth.decorators import login_required
-import google.generativeai as genai
+from pathlib import Path
+import uuid
+import subprocess
+from .models import Testcase, Problems
 # Create your views here.
 Language = [
     {'value':'py' ,'label': 'python'},
@@ -15,26 +18,9 @@ Language = [
     {'value':'c', 'label':'c'}
 ]
 
-def clean_input(input_data):
-    input_data  = input_data.strip()
-   # input_data = input_data.replace('\n', '')
-    return input_data
 
-def index(request):
-    message = ""
-    if "tasks" not in request.session:
-        request.session["tasks"] = []
-    if request.method == "POST":
-        task = request.POST["task"]
-        username = request.POST["username"]
-        if username != "":
-           request.session["tasks"].append(task)
-           request.session.save()
-        else:
-            message = "Login required"
-    return render(request, "oj/index.html",{
-        "tasks":request.session["tasks"], "message":message
-    })
+def index(request): 
+    return render(request, "oj/index.html")
 
 
 def register(request):
@@ -56,6 +42,7 @@ def register(request):
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     return render(request, "oj/register.html")
+
 def login_view(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -73,9 +60,13 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
-from pathlib import Path
-import uuid
-import subprocess
+def clean_input(input_data):
+    input_data  = input_data.strip()
+   # input_data = input_data.replace('\n', '')
+    return input_data
+
+
+
 def run_code(code, lang, input_data):
     project_path = Path(settings.BASE_DIR)
     directories = ["code", "input", "output"]
@@ -137,25 +128,6 @@ def run_code(code, lang, input_data):
         return str(e)
 
 
-# def submit(request):
-#     curr_code = ""
-#     curr_lang = "cpp"
-#     curr_input = ""
-#     if request.method == "POST":
-#         code = request.POST["code"]
-#         lang = request.POST["language"]
-#         input_data = request.POST["input_data"]
-#         curr_code = code
-#         curr_lang = lang
-#         curr_input = input_data
-#         output = run_code(code, lang, input_data)
-#         return render(request, "oj/editor.html", {"submission":output, "options":Language, "code" : curr_code, "lang": curr_lang, "input": curr_input})
-#     return render(request, "oj/editor.html", {"options":Language, "code" : curr_code, "lang": curr_lang, "input": curr_input})
-
-
-
-
-from .models import Testcase, Problems
 
 def problems(request):
     problems = Problems.objects.all()
@@ -172,8 +144,8 @@ def problems(request):
             p = (prob.name).lower()
             if name in p:
                 recommendation.append(prob)
-            print(p)
-            print(name)
+            # print(p)
+            # print(name)
         return render(request, 'oj/problems.html', {"Problems":recommendation, "status": status})
     return render(request, 'oj/problems.html', {'Problems':problems, "status": status})
 
@@ -219,7 +191,7 @@ def solve(request, problem_id):
             curr_lang = lang
             curr_input = input_data
             output = run_code(code, lang, input_data)
-            print(output)
+            # print(output)
             return render(request, "oj/solve.html", {"problem":problem ,"output":output, "options":Language, "code" : curr_code, "lang": curr_lang, "input": curr_input, "next": next})
         return submit(request, problem, Testcases, next)
     return render(request, 'oj/solve.html', {"problem" : problem, "options":Language,  "next": next})
@@ -231,12 +203,28 @@ def profile(request):
     problems = Problems.objects.all()
     return render(request, "oj/profile.html", {"problems": problems})
 
-def comingsoon(request):
-   return render(request, "oj/comingsoon.html")
+import os
+from ollama import Client
 
+client = Client(
+    host="https://ollama.com",
+    headers={
+        "Authorization": f"Bearer {os.environ['OLLAMA_API_KEY']}"
+    }
+)
+
+def call_local_llm_fixer(prompt_text):
+    response = client.generate(
+        model="gemma4:31b-cloud",
+        prompt=prompt_text,
+        think=False,
+        stream=False,
+    )
+
+    return response["response"].strip()
 def evaluate_code(code, lang):
-    import google.generativeai as genai
-    genai.configure(api_key=settings.GEMINI_API_KEY)
+    # import google.generativeai as genai
+    # genai.configure(api_key=settings.GEMINI_API_KEY)
 
     prompt = f"""
         You are a strict code quality reviewer. Evaluate the code below and respond in the following strict format only (NO explanation):
@@ -248,6 +236,7 @@ def evaluate_code(code, lang):
 
         generate result in visually appealing form following a standard way always same not different in other request
         like this , Also add next line not everything in same line
+        
         ===============================
         CODE QUALITY EVALUATION REPORT
         ===============================
@@ -264,8 +253,28 @@ def evaluate_code(code, lang):
     """
 
     try:
-        model = genai.GenerativeModel('gemini-2.0-flash-lite')
-        response = model.generate_content(prompt)
-        return response.text
+        # model = genai.GenerativeModel('gemini-2.0-flash-lite')
+        # response = model.generate_content(prompt)
+        response = call_local_llm_fixer(prompt)
+        return response
     except Exception as e:
-        return f"Error evaluating code: {str(e)}"
+        return f"Error evaluating code"
+        # return f"Error evaluating code: {str(e)}"
+        
+def comingsoon(request):
+   return render(request, "oj/comingsoon.html")
+        
+# def submit(request):
+#     curr_code = ""
+#     curr_lang = "cpp"
+#     curr_input = ""
+#     if request.method == "POST":
+#         code = request.POST["code"]
+#         lang = request.POST["language"]
+#         input_data = request.POST["input_data"]
+#         curr_code = code
+#         curr_lang = lang
+#         curr_input = input_data
+#         output = run_code(code, lang, input_data)
+#         return render(request, "oj/editor.html", {"submission":output, "options":Language, "code" : curr_code, "lang": curr_lang, "input": curr_input})
+#     return render(request, "oj/editor.html", {"options":Language, "code" : curr_code, "lang": curr_lang, "input": curr_input})

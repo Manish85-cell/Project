@@ -1,1 +1,0 @@
-name = input()print(f"Hello, {name}")status = input()print(f"How are you?{status}")
