@@ -10,7 +10,19 @@ from django.contrib.auth.decorators import login_required
 from pathlib import Path
 import uuid
 import subprocess
+import resource
+import pwd
 from .models import Testcase, Problems
+
+# Resource Limits
+TIME_LIMIT = 2 # seconds
+MEMORY_LIMIT = 128 * 1024 * 1024 # 128 MB
+
+try:
+    JUDGE_UID = pwd.getpwnam('judge_runner').pw_uid
+except KeyError:
+    JUDGE_UID = None # Fallback if user not found
+
 # Create your views here.
 Language = [
     {'value':'py' ,'label': 'python'},
@@ -67,6 +79,14 @@ def clean_input(input_data):
 
 
 
+def set_limits():
+    """Set resource limits for the child process."""
+    try:
+        resource.setrlimit(resource.RLIMIT_AS, (MEMORY_LIMIT, MEMORY_LIMIT))
+    except (ValueError, OSError):
+        # Some OSes (like macOS) do not support RLIMIT_AS
+        pass
+
 def run_code(code, lang, input_data):
     project_path = Path(settings.BASE_DIR)
     directories = ["code", "input", "output"]
@@ -84,6 +104,7 @@ def run_code(code, lang, input_data):
     code_file_path  = codes_dir / f"{unique}.{lang}"
     input_file_path = input_dir / f"{unique}.txt"
     output_file_path = output_dir / f"{unique}.txt"
+    executable_path = None
 
     try:
         with open(code_file_path, "w") as code_file:
@@ -91,33 +112,48 @@ def run_code(code, lang, input_data):
         with open(input_file_path, "w") as input_file:
             input_file.write(clean_input(input_data))
 
-        #creating empty output file
+        # creating empty output file
         output_file_path.touch()
 
         if lang == "cpp" or lang == "c":
             executable_path = codes_dir / (unique + ".exe")
             compilation_command = ["g++", str(code_file_path), "-o", str(executable_path)]
-            compile_result = subprocess.run(
-                compilation_command,
-                stderr = subprocess.PIPE,
-                text = True
-            )
-            if compile_result.returncode != 0:
-                return compile_result.stderr
-            run_command = [str(executable_path)]
+            try:
+                compile_result = subprocess.run(
+                    compilation_command,
+                    stderr = subprocess.PIPE,
+                    text = True,
+                    timeout = TIME_LIMIT
+                )
+                if compile_result.returncode != 0:
+                    return compile_result.stderr
+                run_command = [str(executable_path)]
+            except subprocess.TimeoutExpired:
+                return "Compilation Time Limit Exceeded"
         elif lang == "py":
             run_command = ["python", str(code_file_path)]
         else:
-           return "Unsupported language"
-        run_result = subprocess.run(
-            run_command,
-            stdin = open(input_file_path, "r"),
-            stdout = open(output_file_path, "w"),
-            stderr = subprocess.PIPE,
-            text = True
-        )
+            return "Unsupported language"
+
+        try:
+            with open(input_file_path, "r") as stdin_f, open(output_file_path, "w") as stdout_f:
+                run_result = subprocess.run(
+                    run_command,
+                    stdin = stdin_f,
+                    stdout = stdout_f,
+                    stderr = subprocess.PIPE,
+                    text = True,
+                    timeout = TIME_LIMIT,
+                    preexec_fn = set_limits,
+                    user = JUDGE_UID
+                )
+        except subprocess.TimeoutExpired:
+            return "Time Limit Exceeded (TLE)"
 
         if run_result.returncode != 0:
+            # Check for memory limit exceeded (SIGSEGV / 11 on Linux)
+            if run_result.returncode == -11 or run_result.returncode == 139:
+                return "Memory Limit Exceeded (MLE)"
             return run_result.stderr
 
         with open(output_file_path, "r") as output_file:
@@ -126,6 +162,14 @@ def run_code(code, lang, input_data):
         return output_data
     except Exception as e:
         return str(e)
+    finally:
+        # Cleanup temporary files
+        for f in [code_file_path, input_file_path, output_file_path, executable_path]:
+            if f and f.exists():
+                try:
+                    f.unlink()
+                except Exception:
+                    pass
 
 
 
